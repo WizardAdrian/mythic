@@ -27,7 +27,10 @@ public abstract class BaseRender implements GLSurfaceView.Renderer {
         mContext = context;
         mRunOnDraw = new ConcurrentLinkedQueue<>();
         mRunOnDrawEnd = new ConcurrentLinkedQueue<>();
+    }
 
+    @Override
+    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         mTexturePrepareHandler = new TexturePrepareHandler(new SurfaceTexture.OnFrameAvailableListener() {
             @Override
             public void onFrameAvailable(SurfaceTexture surfaceTexture) {
@@ -35,10 +38,7 @@ public abstract class BaseRender implements GLSurfaceView.Renderer {
             }
         });
         mDrawCameraHandler = new DrawCameraHandler(mContext, getSurfaceTexture(), getSurfaceTextureId());
-    }
 
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         mTexturePrepareHandler.createAction(gl, config);
         mDrawCameraHandler.createAction(gl, config);
     }

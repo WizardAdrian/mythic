@@ -108,7 +108,7 @@ public class MythicCameraManager extends CameraManager {
                     mRenderer.onSurfaceDestroyed();
                 }
             }
-        });
+        }, mRenderer);
         mImageCallBack = new CameraInterface.ImageCallBack() {
             @Override
             public void onHandle(byte[] data, int w, int h, int format) {

@@ -26,6 +26,18 @@ public class HomeActivity extends Activity {
         initCamera();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        launchCamera();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        closeCamera();
+    }
+
     private void initCamera() {
         if (!CameraUtils.checkHardware(this)) {
            finish();
@@ -35,6 +47,7 @@ public class HomeActivity extends Activity {
 
         mCameraManager = new MythicCameraManager(this, true);
         mCameraManager.setRatio(ratio);
+        mCameraManager.forbidFocusView(true);
 
         mFlCameraContainer = (FrameLayout) findViewById(R.id.fl_camera_container);
         width = CameraUtils.getScreenWidth(this);
