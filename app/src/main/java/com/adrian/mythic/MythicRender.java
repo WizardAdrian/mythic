@@ -11,13 +11,7 @@ import mythic.adrian.imageprocessor.render.BaseRender;
 
 public class MythicRender extends BaseRender {
 
-    private Context mContext;
-
     public MythicRender(Context context) {
-        mContext = context;
-    }
-
-    public Context getContext() {
-        return mContext;
+        super(context);
     }
 }

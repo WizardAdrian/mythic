@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Mythic.iml" filepath="$PROJECT_DIR$/Mythic.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/imageprocessor/imageprocessor.iml" filepath="$PROJECT_DIR$/imageprocessor/imageprocessor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mythic.iml" filepath="$PROJECT_DIR$/mythic.iml" />
     </modules>
   </component>
 </project>

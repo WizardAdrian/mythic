@@ -1,5 +1,6 @@
 package mythic.adrian.imageprocessor.render;
 
+import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
 
@@ -8,6 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import mythic.adrian.imageprocessor.render.handler.DrawCameraHandler;
 import mythic.adrian.imageprocessor.render.handler.TexturePrepareHandler;
 
 /**
@@ -18,8 +20,11 @@ import mythic.adrian.imageprocessor.render.handler.TexturePrepareHandler;
 public abstract class BaseRender implements GLSurfaceView.Renderer {
 
     private TexturePrepareHandler mTexturePrepareHandler;
+    private DrawCameraHandler mDrawCameraHandler;
+    protected Context mContext;
 
-    public BaseRender() {
+    public BaseRender(Context context) {
+        mContext = context;
         mRunOnDraw = new ConcurrentLinkedQueue<>();
         mRunOnDrawEnd = new ConcurrentLinkedQueue<>();
 
@@ -29,16 +34,19 @@ public abstract class BaseRender implements GLSurfaceView.Renderer {
 
             }
         });
+        mDrawCameraHandler = new DrawCameraHandler(mContext, getSurfaceTexture(), getSurfaceTextureId());
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         mTexturePrepareHandler.createAction(gl, config);
+        mDrawCameraHandler.createAction(gl, config);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         mTexturePrepareHandler.changeAction(gl, width, height);
+        mDrawCameraHandler.changeAction(gl, width, height);
     }
 
     @Override
@@ -60,6 +68,9 @@ public abstract class BaseRender implements GLSurfaceView.Renderer {
         return mTexturePrepareHandler.getSurfaceTexture();
     }
 
+    public Context getContext() {
+        return mContext;
+    }
 
     private final ConcurrentLinkedQueue<Runnable> mRunOnDraw;//绘制队列1
     private final ConcurrentLinkedQueue<Runnable> mRunOnDrawEnd;//绘制队列2

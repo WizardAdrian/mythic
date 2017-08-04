@@ -1,12 +1,17 @@
 package mythic.adrian.imageprocessor.render;
 
 import android.content.Context;
+import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+
+import mythic.adrian.imageprocessor.R;
+import mythic.adrian.imageprocessor.utils.GlUtil;
+import mythic.adrian.imageprocessor.utils.TextResourceReader;
 
 /**
  * Created by Adrian on 2017/8/4.
