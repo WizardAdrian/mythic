@@ -1,2 +1,2 @@
 # mythic
-simple multi-nedia library
+simple multi-media library
