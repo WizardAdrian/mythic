@@ -18,9 +18,23 @@ public class DrawCameraHandler extends DrawHandler {
     private SurfaceTexture mSurfaceTexture;
     private DirectDrawer mDirectDrawer;
 
-    public DrawCameraHandler(Context context, SurfaceTexture surfaceTexture, int surfaceTextureId) {
+    private float mDegrees;
+    private boolean mFlipH;
+    private boolean mFlipV;
+
+    public DrawCameraHandler() {
+
+    }
+
+    public void setRotation(float degrees, boolean flipH, boolean flipV) {
+        mDegrees = degrees;
+        mFlipH = flipH;
+        mFlipV = flipV;
+    }
+
+    public void setSurfaceTexture(Context context, SurfaceTexture surfaceTexture, int surfaceTextureId) {
         mSurfaceTexture = surfaceTexture;
-        mDirectDrawer = new DirectDrawer(context, surfaceTextureId);
+        mDirectDrawer = new DirectDrawer(context, surfaceTextureId, mDegrees, mFlipH, mFlipV);
     }
 
     @Override
@@ -39,8 +53,8 @@ public class DrawCameraHandler extends DrawHandler {
     }
 
     @Override
-    public void createAction(Object o, Object o2) {
-
+    public void createAction(Object o, Object o2, Object... params) {
+        setSurfaceTexture((Context) params[0], (SurfaceTexture) params[1], (int) params[2]);
     }
 
     @Override

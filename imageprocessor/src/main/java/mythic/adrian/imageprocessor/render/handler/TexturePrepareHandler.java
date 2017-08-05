@@ -30,7 +30,7 @@ public class TexturePrepareHandler extends DrawHandler {
     }
 
     @Override
-    public void createAction(Object o, Object o2) {
+    public void createAction(Object o, Object o2, Object... params) {
         genSurfaceTexture(mListener);
     }
 

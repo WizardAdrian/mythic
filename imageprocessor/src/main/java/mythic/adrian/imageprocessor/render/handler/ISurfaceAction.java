@@ -7,7 +7,7 @@ package mythic.adrian.imageprocessor.render.handler;
 
 public interface ISurfaceAction<Env, Config> {
 
-    void createAction(Env env, Config config);
+    void createAction(Env env, Config config, Object... params);
 
     void changeAction(Env env, int width, int height);
 

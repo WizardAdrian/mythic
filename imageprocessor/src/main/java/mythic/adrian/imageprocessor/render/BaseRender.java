@@ -22,25 +22,24 @@ public abstract class BaseRender implements GLSurfaceView.Renderer {
     private TexturePrepareHandler mTexturePrepareHandler;
     private DrawCameraHandler mDrawCameraHandler;
     protected Context mContext;
+    private SurfaceTexture.OnFrameAvailableListener mOnFrameAvailableListener;
 
-    public BaseRender(Context context) {
+    public BaseRender(Context context, SurfaceTexture.OnFrameAvailableListener onFrameAvailableListener) {
         mContext = context;
+        mOnFrameAvailableListener = onFrameAvailableListener;
         mRunOnDraw = new ConcurrentLinkedQueue<>();
         mRunOnDrawEnd = new ConcurrentLinkedQueue<>();
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        mTexturePrepareHandler = new TexturePrepareHandler(new SurfaceTexture.OnFrameAvailableListener() {
-            @Override
-            public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+        mTexturePrepareHandler = new TexturePrepareHandler(mOnFrameAvailableListener);
+        mDrawCameraHandler = new DrawCameraHandler();
 
-            }
-        });
-        mDrawCameraHandler = new DrawCameraHandler(mContext, getSurfaceTexture(), getSurfaceTextureId());
+        mTexturePrepareHandler.setSuccessor(mDrawCameraHandler);
 
         mTexturePrepareHandler.createAction(gl, config);
-        mDrawCameraHandler.createAction(gl, config);
+        mDrawCameraHandler.createAction(gl, config, mContext, getSurfaceTexture(), getSurfaceTextureId());
     }
 
     @Override
@@ -70,6 +69,10 @@ public abstract class BaseRender implements GLSurfaceView.Renderer {
 
     public Context getContext() {
         return mContext;
+    }
+
+    public void setRotation(float degrees, boolean flipH, boolean flipV) {
+        mDrawCameraHandler.setRotation(degrees, flipH, flipV);
     }
 
     private final ConcurrentLinkedQueue<Runnable> mRunOnDraw;//绘制队列1

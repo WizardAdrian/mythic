@@ -2,6 +2,8 @@ package com.adrian.mythic;
 
 import android.app.Activity;
 import android.graphics.Point;
+import android.graphics.SurfaceTexture;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -100,7 +102,12 @@ public class MythicCameraManager extends CameraManager {
     @Override
     protected void initializeRenderer(Activity activity, Object... extra) {
 
-        mRenderer = new MythicRender(activity);
+        mRenderer = new MythicRender(activity, new SurfaceTexture.OnFrameAvailableListener() {
+            @Override
+            public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+                requestRender();
+            }
+        });
         mCameraContainer.initialize(new CameraView.OnGLDestroyedListener() {
             @Override
             public void onDestroyed(SurfaceHolder holder) {
@@ -128,7 +135,7 @@ public class MythicCameraManager extends CameraManager {
             @Override
             public void run() {
                 final int _degrees = (parameters.degree - CameraUtils.getDisplayDegree((Activity) mRenderer.getContext()) + 360) % 360;
-//                mRenderer.setRotation(_degrees, parameters.flipH, false);
+                mRenderer.setRotation(_degrees, parameters.flipH, false);
 //                mRenderer.setSize(parameters.previewWidth, parameters.previewHeight);
 //                mRenderer.setSizeRatio(0, 0, mPreviewRatio);
 //                mRenderer.setScaleType(ClipHandler.SCALE_TYPE_CENTER_INSIDE);

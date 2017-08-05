@@ -1,6 +1,7 @@
 package com.adrian.mythic;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 
 import mythic.adrian.imageprocessor.render.BaseRender;
 
@@ -11,7 +12,7 @@ import mythic.adrian.imageprocessor.render.BaseRender;
 
 public class MythicRender extends BaseRender {
 
-    public MythicRender(Context context) {
-        super(context);
+    public MythicRender(Context context, SurfaceTexture.OnFrameAvailableListener onFrameAvailableListener) {
+        super(context, onFrameAvailableListener);
     }
 }

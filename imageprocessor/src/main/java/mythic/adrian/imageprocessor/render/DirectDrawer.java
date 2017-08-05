@@ -1,6 +1,7 @@
 package mythic.adrian.imageprocessor.render;
 
 import android.content.Context;
+import android.graphics.Matrix;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
@@ -46,7 +47,7 @@ public class DirectDrawer {
     }
 
 
-    public DirectDrawer(Context context,int texture) {
+    public DirectDrawer(Context context, int texture, float degrees, boolean flipH, boolean flipV) {
         String vertextShader = TextResourceReader.readTextFileFromResource(context
                 , R.raw.video_vertex_shader);
         String fragmentShader = TextResourceReader.readTextFileFromResource(context
@@ -72,6 +73,8 @@ public class DirectDrawer {
         this.texture = texture;
         // initialize vertex byte buffer for shape coordinates
         updateVertices();
+
+        getVertexRotation(degrees, flipH, flipV);
 
         setTexCoords();
 
@@ -169,5 +172,22 @@ public class DirectDrawer {
         mTextureCoordsBuffer = ByteBuffer.allocateDirect(mTextureCoords.length * 4).order(ByteOrder.nativeOrder())
                 .asFloatBuffer().put(mTextureCoords);
         mTextureCoordsBuffer.position(0);
+    }
+
+    public float[] getVertexRotation(float degrees, boolean flipH, boolean flipV) {
+        float[] dst = new float[mVertices.length];
+        Matrix m = new Matrix();
+        float sx = 1.0f;
+        float sy = 1.0f;
+        if (flipH) {
+            sx = -1.0f;
+        }
+        if (flipV) {
+            sy = -1.0f;
+        }
+        m.setScale(sx, sy);
+        m.preRotate(360 - degrees);
+        m.mapPoints(dst, mVertices);
+        return dst;
     }
 }
