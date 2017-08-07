@@ -22,8 +22,6 @@ public class DrawCameraHandler extends DrawHandler {
     private DirectDrawer mDirectDrawer;
 
     private float mDegrees = -1f;
-    private boolean mFlipH;
-    private boolean mFlipV;
 
     public DrawCameraHandler(Context context) {
         mContext = context;
@@ -31,8 +29,12 @@ public class DrawCameraHandler extends DrawHandler {
 
     public void setRotation(float degrees, boolean flipH, boolean flipV) {
         mDegrees = degrees;
-        mFlipH = flipH;
-        mFlipV = flipV;
+
+        if (mDirectDrawer == null) {
+            mDirectDrawer = new DirectDrawer(mContext, mSurfaceTextureId, degrees, flipH, flipV);
+        } else {
+            mDirectDrawer.updateVertices(degrees, flipH, flipV);
+        }
     }
 
     public void setSurfaceTexture(SurfaceTexture surfaceTexture, int surfaceTextureId) {
@@ -48,9 +50,6 @@ public class DrawCameraHandler extends DrawHandler {
         mSurfaceTexture.updateTexImage();
 
         if (mDegrees != -1) {
-            if (mDirectDrawer == null) {
-                mDirectDrawer = new DirectDrawer(mContext, mSurfaceTextureId, mDegrees, mFlipH, mFlipV);
-            }
             mDirectDrawer.draw();
         }
 

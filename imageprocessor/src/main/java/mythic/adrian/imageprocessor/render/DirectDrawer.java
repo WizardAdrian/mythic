@@ -184,7 +184,7 @@ public class DirectDrawer {
         mTextureCoordsBuffer.position(0);
     }
 
-    public float[] getVertexRotation(float degrees, boolean flipH, boolean flipV) {
+    public float[] getVertexRotation(float rotation, boolean flipH, boolean flipV) {
         float[] dst = new float[mVertices.length];
         Matrix m = new Matrix();
         float sx = 1.0f;
@@ -196,7 +196,7 @@ public class DirectDrawer {
             sy = -1.0f;
         }
         m.setScale(sx, sy);
-        m.preRotate(360 - degrees + 90);
+        m.preRotate(360 - rotation + 90);
         m.mapPoints(dst, mVertices);
         return dst;
     }
