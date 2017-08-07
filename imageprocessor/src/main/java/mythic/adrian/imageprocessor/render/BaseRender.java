@@ -34,12 +34,12 @@ public abstract class BaseRender implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         mTexturePrepareHandler = new TexturePrepareHandler(mOnFrameAvailableListener);
-        mDrawCameraHandler = new DrawCameraHandler();
+        mDrawCameraHandler = new DrawCameraHandler(mContext);
 
         mTexturePrepareHandler.setSuccessor(mDrawCameraHandler);
 
         mTexturePrepareHandler.createAction(gl, config);
-        mDrawCameraHandler.createAction(gl, config, mContext, getSurfaceTexture(), getSurfaceTextureId());
+        mDrawCameraHandler.createAction(gl, config, getSurfaceTexture(), getSurfaceTextureId());
     }
 
     @Override

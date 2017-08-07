@@ -2,6 +2,7 @@ package com.adrian.mythic;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import mythic.adrian.imageprocessor.camera.CameraUtils;
@@ -24,6 +25,13 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.mythic_activity_home);
 
         initCamera();
+
+        findViewById(R.id.btn_switch_camera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchCamera();
+            }
+        });
     }
 
     @Override
@@ -40,7 +48,7 @@ public class HomeActivity extends Activity {
 
     private void initCamera() {
         if (!CameraUtils.checkHardware(this)) {
-           finish();
+            finish();
             return;
         }
         float ratio = (float) 3 / (float) 4;

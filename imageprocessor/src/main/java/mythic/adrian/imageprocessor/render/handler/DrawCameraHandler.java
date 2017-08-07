@@ -15,15 +15,18 @@ import mythic.adrian.imageprocessor.render.DirectDrawer;
 
 public class DrawCameraHandler extends DrawHandler {
 
+    private Context mContext;
+
     private SurfaceTexture mSurfaceTexture;
+    private int mSurfaceTextureId;
     private DirectDrawer mDirectDrawer;
 
-    private float mDegrees;
+    private float mDegrees = -1f;
     private boolean mFlipH;
     private boolean mFlipV;
 
-    public DrawCameraHandler() {
-
+    public DrawCameraHandler(Context context) {
+        mContext = context;
     }
 
     public void setRotation(float degrees, boolean flipH, boolean flipV) {
@@ -32,9 +35,9 @@ public class DrawCameraHandler extends DrawHandler {
         mFlipV = flipV;
     }
 
-    public void setSurfaceTexture(Context context, SurfaceTexture surfaceTexture, int surfaceTextureId) {
+    public void setSurfaceTexture(SurfaceTexture surfaceTexture, int surfaceTextureId) {
         mSurfaceTexture = surfaceTexture;
-        mDirectDrawer = new DirectDrawer(context, surfaceTextureId, mDegrees, mFlipH, mFlipV);
+        mSurfaceTextureId = surfaceTextureId;
     }
 
     @Override
@@ -44,7 +47,12 @@ public class DrawCameraHandler extends DrawHandler {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         mSurfaceTexture.updateTexImage();
 
-        mDirectDrawer.draw();
+        if (mDegrees != -1) {
+            if (mDirectDrawer == null) {
+                mDirectDrawer = new DirectDrawer(mContext, mSurfaceTextureId, mDegrees, mFlipH, mFlipV);
+            }
+            mDirectDrawer.draw();
+        }
 
         if (getSuccessor() != null) {
             getSuccessor().handleDraw(gl10);
@@ -54,7 +62,7 @@ public class DrawCameraHandler extends DrawHandler {
 
     @Override
     public void createAction(Object o, Object o2, Object... params) {
-        setSurfaceTexture((Context) params[0], (SurfaceTexture) params[1], (int) params[2]);
+        setSurfaceTexture((SurfaceTexture) params[0], (int) params[1]);
     }
 
     @Override

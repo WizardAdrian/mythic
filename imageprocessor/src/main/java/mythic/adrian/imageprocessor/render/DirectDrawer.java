@@ -72,9 +72,7 @@ public class DirectDrawer {
 
         this.texture = texture;
         // initialize vertex byte buffer for shape coordinates
-        updateVertices();
-
-        getVertexRotation(degrees, flipH, flipV);
+        updateVertices(degrees, flipH, flipV);
 
         setTexCoords();
 
@@ -144,7 +142,7 @@ public class DirectDrawer {
         mout[15] = 1.0f;
     }
 
-    public void updateVertices() {
+    public void updateVertices(float degrees, boolean flipH, boolean flipV) {
         final float w = 1.0f;
         final float h = 1.0f;
         mVertices[0] = -w;
@@ -155,6 +153,18 @@ public class DirectDrawer {
         mVertices[5] = -h;
         mVertices[6] = w;
         mVertices[7] = h;
+
+//        for (int i = 0; i < mVertices.length; i++) {
+//            Log.e("PrintVert", "mVertices " + i + ": " + mVertices[i]);
+//        }
+
+        float[] vertices = getVertexRotation(degrees, flipH, flipV);
+        System.arraycopy(vertices, 0, mVertices, 0, 8);
+
+//        for (int i = 0; i < mVertices.length; i++) {
+//            Log.e("PrintVert", "123 mVertices " + i + ": " + mVertices[i] + " degrees： " + degrees + " flipH: " + flipH + " flipV: " + flipV);
+//        }
+
         vertexBuffer = ByteBuffer.allocateDirect(mVertices.length * 4).order(ByteOrder.nativeOrder())
                 .asFloatBuffer().put(mVertices);
         vertexBuffer.position(0);
@@ -186,7 +196,7 @@ public class DirectDrawer {
             sy = -1.0f;
         }
         m.setScale(sx, sy);
-        m.preRotate(360 - degrees);
+        m.preRotate(360 - degrees + 90);
         m.mapPoints(dst, mVertices);
         return dst;
     }
