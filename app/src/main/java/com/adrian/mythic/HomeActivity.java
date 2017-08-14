@@ -37,12 +37,14 @@ public class HomeActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        mCameraManager.onResume();
         launchCamera();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        mCameraManager.onPause();
         closeCamera();
     }
 
@@ -51,7 +53,8 @@ public class HomeActivity extends Activity {
             finish();
             return;
         }
-        float ratio = (float) 3 / (float) 4;
+//        float ratio = (float) 3 / (float) 4;
+        float ratio = (float) 9 / (float) 16;
 
         mCameraManager = new MythicCameraManager(this, true);
         mCameraManager.setRatio(ratio);

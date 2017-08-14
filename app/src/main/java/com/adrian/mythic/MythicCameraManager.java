@@ -101,7 +101,6 @@ public class MythicCameraManager extends CameraManager {
 
     @Override
     protected void initializeRenderer(Activity activity, Object... extra) {
-
         mRenderer = new MythicRender(activity, new SurfaceTexture.OnFrameAvailableListener() {
             @Override
             public void onFrameAvailable(SurfaceTexture surfaceTexture) {
