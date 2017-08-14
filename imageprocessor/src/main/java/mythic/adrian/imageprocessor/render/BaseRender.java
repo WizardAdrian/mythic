@@ -10,6 +10,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import mythic.adrian.imageprocessor.render.handler.DrawCameraHandler;
+import mythic.adrian.imageprocessor.render.handler.DrawHandler;
 import mythic.adrian.imageprocessor.render.handler.TexturePrepareHandler;
 
 /**
@@ -37,6 +38,7 @@ public abstract class BaseRender implements GLSurfaceView.Renderer {
         mDrawCameraHandler = new DrawCameraHandler(mContext);
 
         mTexturePrepareHandler.setSuccessor(mDrawCameraHandler);
+        attachHandlerInner(attachHandler());
 
         mTexturePrepareHandler.createAction(gl, config);
         mDrawCameraHandler.createAction(gl, config, getSurfaceTexture(), getSurfaceTextureId());
@@ -74,6 +76,12 @@ public abstract class BaseRender implements GLSurfaceView.Renderer {
     public void setRotation(float degrees, boolean flipH, boolean flipV) {
         mDrawCameraHandler.setRotation(degrees, flipH, flipV);
     }
+
+    private void attachHandlerInner(DrawHandler drawHandler) {
+        mDrawCameraHandler.setSuccessor(drawHandler);
+    }
+
+    protected abstract DrawHandler attachHandler();
 
     private final ConcurrentLinkedQueue<Runnable> mRunOnDraw;//绘制队列1
     private final ConcurrentLinkedQueue<Runnable> mRunOnDrawEnd;//绘制队列2

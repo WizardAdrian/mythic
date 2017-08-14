@@ -61,4 +61,12 @@ public class CameraContainer extends FrameLayout {
     public void requestRender(){
         mCameraView.requestRender();
     }
+
+    public void onResume(){
+        mCameraView.onResume();
+    }
+
+    public void onPause() {
+        mCameraView.onPause();
+    }
 }

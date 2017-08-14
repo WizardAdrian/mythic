@@ -89,8 +89,12 @@ public abstract class CameraManager {
         mCameraContainer.requestRender();
     }
 
+    public void onResume(){
+        mCameraContainer.onResume();
+    }
+
     public void onPause() {
-        mCamera.closeCamera();
+        mCameraContainer.onPause();
     }
 
     protected abstract void initializeRenderer(Activity activity, Object... extra);

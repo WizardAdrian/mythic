@@ -13,7 +13,6 @@ import android.view.SurfaceHolder;
 
 public class CameraView extends GLSurfaceView {
     public final static String TAG = "CameraView";
-    public SurfaceHolder holder;
 
     public interface OnGLDestroyedListener {
         /**
@@ -41,8 +40,8 @@ public class CameraView extends GLSurfaceView {
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         getHolder().setFormat(PixelFormat.RGBA_8888);
         setRenderer(render);
-        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-//        setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+//        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         requestRender();
     }
 

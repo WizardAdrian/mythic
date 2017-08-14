@@ -23,6 +23,8 @@ public class TexturePrepareHandler extends DrawHandler {
     @Override
     public Object handleDraw(GL10 gl10) {
 
+        gl10.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+
         if (getSuccessor() != null) {
             getSuccessor().handleDraw(gl10);
         }
