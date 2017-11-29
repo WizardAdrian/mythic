@@ -25,13 +25,13 @@ public class MythicRender extends BaseRender {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         super.onSurfaceCreated(gl, config);
-        mShapeHandler.createAction(gl, config);
+//        mShapeHandler.createAction(gl, config);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         super.onSurfaceChanged(gl, width, height);
-        mShapeHandler.changeAction(gl, width, height);
+//        mShapeHandler.changeAction(gl, width, height);
     }
 
     @Override
@@ -41,8 +41,9 @@ public class MythicRender extends BaseRender {
 
     @Override
     protected DrawHandler attachHandler() {
-        mShapeHandler = new ShapeHandler(mContext);
-        return mShapeHandler;
+//        mShapeHandler = new ShapeHandler(mContext);
+//        return mShapeHandler;
+        return null;
     }
 
     public void setAngle(int angle) {

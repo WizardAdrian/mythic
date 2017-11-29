@@ -8,6 +8,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.widget.Toast;
 
 import mythic.adrian.imageprocessor.camera.CameraInterface;
 import mythic.adrian.imageprocessor.camera.CameraManager;
@@ -31,6 +32,8 @@ public class MythicCameraManager extends CameraManager {
     private GestureDetector mGesture;
 
     private boolean forbidFocusView;
+
+    public boolean mCheckPermission;
 
     private float mPreviousX;
     private float mPreviousY;
@@ -182,6 +185,14 @@ public class MythicCameraManager extends CameraManager {
             }
         });
         requestRender();
+    }
+
+    @Override
+    protected void checkPermission(boolean hasPermission) {
+        mCheckPermission = hasPermission;
+        if (!mCheckPermission) {
+            Toast.makeText(mRenderer.getContext(), "请检查您的相机权限是否开启", Toast.LENGTH_LONG).show();
+        }
     }
 
     private final CameraInterface.FocusCallBack autoFocusCallback = new CameraInterface.FocusCallBack() {
