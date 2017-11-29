@@ -260,7 +260,6 @@ public final class CameraWrapper implements CameraInterface {
         mCamera.cancelAutoFocus();
         // 拍照模式的连续自动对焦
 //        mParameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-        Camera.Parameters parameters = mParameters;
 
         Camera.AutoFocusCallback callback = new Camera.AutoFocusCallback() {
             @Override
@@ -278,9 +277,70 @@ public final class CameraWrapper implements CameraInterface {
             }
             return;
         }
-        List<Camera.Area> areas = CameraUtils.computeAreas(mCameraId, x, y, r);
-        if (parameters.getMaxNumMeteringAreas() > 0) {
-            parameters.setMeteringAreas(areas);
+
+        //目前设置的测光、对焦区域为相同区域
+        List<Camera.Area> areas = CameraUtils.computeAreas(mCameraId, x, y, r, 1000);
+        //设置测光区域
+        if (mParameters.getMaxNumMeteringAreas() > 0) {
+            mParameters.setMeteringAreas(areas);
+        }
+        if (null == focusCallBack) {
+            //应用层设置无须对焦，只用补光
+            invalidateParameters();
+            return;
+        }
+        //设置对焦区域
+        if (mParameters.getMaxNumFocusAreas() > 0) {
+            mParameters.setFocusAreas(areas);
+        }
+        invalidateParameters();
+        mCamera.autoFocus(callback);
+    }
+
+    @Override
+    public void focus(final FocusCallBack focusCallBack, List<Photometry> photometryList) {
+        if (null == mCamera || !mPreviewOpen.get()) {
+            return;
+        }
+        mCamera.cancelAutoFocus();
+        // 拍照模式的连续自动对焦
+//        mParameters.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+        Camera.Parameters parameters = mParameters;
+
+        Camera.AutoFocusCallback callback = new Camera.AutoFocusCallback() {
+            @Override
+            public void onAutoFocus(boolean success, Camera camera) {
+                if (null != focusCallBack) {
+                    focusCallBack.onHandle(success);
+                }
+            }
+        };
+
+        List<Camera.Area> areas = new ArrayList<>();
+
+        if (photometryList == null || photometryList.size() == 0) {
+            String flash = mParameters.getFlashMode();
+            invalidateParameters();
+            if (null == flash || flash.equals(Camera.Parameters.FLASH_MODE_OFF)) {
+                mCamera.autoFocus(callback);
+            }
+            return;
+        }
+        for (Photometry photometry : photometryList) {
+            areas.add(CameraUtils.computeArea(mCameraId, photometry.cx, photometry.cy, photometry.r, photometry.weight));
+        }
+
+        //对焦（补光）区域策略，首先先判断手机支持最大的对焦区域个数以及外部传入的对焦区域个数，
+        //均大于0才调用setMeteringAreas
+        int maxNumMeteringAreas = parameters.getMaxNumMeteringAreas();
+        if (maxNumMeteringAreas > 0 && areas.size() > 0) {
+            if (maxNumMeteringAreas >= areas.size()) {
+                parameters.setMeteringAreas(areas);
+            } else {
+                List<Camera.Area> tmp = new ArrayList<>();
+                tmp.add(areas.get(0));
+                parameters.setMeteringAreas(tmp);
+            }
         }
         if (null == focusCallBack) {
             /* 应用层设置无须对焦，只用补光 */
@@ -288,12 +348,9 @@ public final class CameraWrapper implements CameraInterface {
             return;
         }
         // 不支持设置自定义聚焦，则使用自动聚焦，返回
-        if (parameters.getMaxNumFocusAreas() <= 0) {
-            invalidateParameters();
-            mCamera.autoFocus(callback);
-            return;
+        if (parameters.getMaxNumFocusAreas() > 0) {
+            parameters.setFocusAreas(areas);
         }
-        parameters.setFocusAreas(areas);
         invalidateParameters();
         mCamera.autoFocus(callback);
     }
@@ -406,12 +463,6 @@ public final class CameraWrapper implements CameraInterface {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    @Override
-    public void focus(FocusCallBack acb, List<Photometry> photometryList) {
-
     }
 
     /**

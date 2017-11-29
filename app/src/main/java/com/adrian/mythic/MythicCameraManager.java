@@ -32,6 +32,11 @@ public class MythicCameraManager extends CameraManager {
 
     private boolean forbidFocusView;
 
+    private float mPreviousX;
+    private float mPreviousY;
+
+    private final static float TOUCH_SCALE_FACTOR = 180.0f / 320;
+
     public interface ICheckPermission {
         void isValid(boolean valid);
     }
@@ -89,6 +94,37 @@ public class MythicCameraManager extends CameraManager {
                 }
             });
         }
+
+        setCameraViewTouchEvent(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent e) {
+                float x = e.getX();
+                float y = e.getY();
+                switch (e.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+
+                        float dx = x - mPreviousX;
+                        float dy = y - mPreviousY;
+
+                        // reverse direction of rotation above the mid-line
+                        if (y > getCameraViewContainer().getHeight() / 2) {
+                            dx = dx * -1;
+                        }
+
+                        // reverse direction of rotation to left of the mid-line
+                        if (x < getCameraViewContainer().getWidth() / 2) {
+                            dy = dy * -1;
+                        }
+
+                        mRenderer.setAngle((int) ((dx + dy) * TOUCH_SCALE_FACTOR));    // = 180.0f / 320
+                        requestRender();
+                }
+
+                mPreviousX = x;
+                mPreviousY = y;
+                return true;
+            }
+        });
     }
 
     public void setRatio(float ratio) {
@@ -118,7 +154,7 @@ public class MythicCameraManager extends CameraManager {
         mImageCallBack = new CameraInterface.ImageCallBack() {
             @Override
             public void onHandle(byte[] data, int w, int h, int format) {
-
+                Log.e("initializeRenderer", "w: " + w + " h: " + h + " format: " + format);
             }
 
             @Override

@@ -44,4 +44,10 @@ public class MythicRender extends BaseRender {
         mShapeHandler = new ShapeHandler(mContext);
         return mShapeHandler;
     }
+
+    public void setAngle(int angle) {
+        if (mShapeHandler != null) {
+            mShapeHandler.setAngle(angle);
+        }
+    }
 }

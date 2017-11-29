@@ -75,8 +75,13 @@ public class CameraUtils {
         return s;
     }
 
-    public static List<Camera.Area> computeAreas(int cameraId, final int x, final int y, final int r) {
+    public static List<Camera.Area> computeAreas(final int cameraId, final int x, final int y, final int r, final int weight) {
         List<Camera.Area> areas = new ArrayList<>();
+        areas.add(computeArea(cameraId, x, y, r, weight));
+        return areas;
+    }
+
+    public static Camera.Area computeArea(int cameraId, final int x, final int y, final int r,final int weight) {
         float fx = ((float) x / (float) DisplayUtil.getScreenWidth()) * 2000f - 1000f;
         float fy = ((float) y / (float) DisplayUtil.getScreenHeight()) * 2000f - 1000f;
         float fr = (float) r;
@@ -102,10 +107,9 @@ public class CameraUtils {
         Rect rect = new Rect();
         rectf.round(rect);
 
-        areas.add(new Camera.Area(rect, 1));
         // Log.i(TAG, "Camera Area " + rect.left + ", " + rect.top + ", "
         // + " -> " + rect.right + ", " + rect.bottom);
-        return areas;
+        return new Camera.Area(rect, weight);
     }
 
     public static float getRatio(Camera.Size size, int width, int height) {

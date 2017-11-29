@@ -59,6 +59,8 @@ public interface CameraInterface {
     void focus(final FocusCallBack acb, final int x, final int y,
                final int r);
 
+    void focus(final FocusCallBack acb, List<Photometry> photometryList);
+
     void getParameter(final Parameter p);
 
     void setParameter(final Parameter info, final boolean invalidate);
@@ -74,18 +76,18 @@ public interface CameraInterface {
 
     void closeFlashLight();
 
-    void focus(final FocusCallBack acb, List<Photometry> photometryList);
-
     class Photometry {
 
-        public Photometry(int x, int y, int r) {
+        public Photometry(int x, int y, int r, int weight) {
             cx = x;
             cy = y;
             this.r = r;
+            this.weight = weight;
         }
 
         public int cx;
         public int cy;
         public int r;
+        public int weight;
     }
 }

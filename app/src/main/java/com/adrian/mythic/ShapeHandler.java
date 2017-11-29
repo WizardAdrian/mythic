@@ -21,10 +21,17 @@ public class ShapeHandler extends DrawHandler {
     private Triangle mTriangle;
     private float[] mMVPMatrix = new float[16];
     private float[] mProjMatrix = new float[16];
+    private float[] mRotationMatrix = new float[16];
     private float[] mVMatrix = new float[16];
+
+    private int mAngle;
 
     public ShapeHandler(Context context) {
         mContext = context;
+    }
+
+    public void setAngle(int angle) {
+        mAngle += angle;
     }
 
     @Override
@@ -35,6 +42,15 @@ public class ShapeHandler extends DrawHandler {
 
         // 计算投影和视口变换
         Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
+
+
+        // Create a rotation for the triangle
+        // long time = SystemClock.uptimeMillis() % 4000L;
+        // float angle = 0.090f * ((int) time);
+        Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0, 0, -1.0f);
+
+        // 合并旋转矩阵到投影和相机视口矩阵
+        Matrix.multiplyMM(mMVPMatrix, 0, mRotationMatrix, 0, mMVPMatrix, 0);
 
         // 绘制形状
         mTriangle.draw(mMVPMatrix);

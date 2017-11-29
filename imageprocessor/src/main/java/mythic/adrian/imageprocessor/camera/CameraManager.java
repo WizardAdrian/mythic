@@ -3,6 +3,7 @@ package mythic.adrian.imageprocessor.camera;
 import android.app.Activity;
 import android.hardware.Camera;
 import android.view.Surface;
+import android.view.View;
 
 import java.lang.reflect.Method;
 
@@ -103,6 +104,12 @@ public abstract class CameraManager {
 
     public CameraContainer getCameraViewContainer() {
         return mCameraContainer;
+    }
+
+    public void setCameraViewTouchEvent(View.OnTouchListener listener) {
+        if (mCameraContainer != null) {
+            mCameraContainer.setCameraViewTouchEvent(listener);
+        }
     }
 
     private int setMaxSPictureSize(int maxPictureSize) {
