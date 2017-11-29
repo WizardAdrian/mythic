@@ -53,6 +53,7 @@ public abstract class CameraManager {
 
             @Override
             public void onStartPreview() {
+                checkPermission(mParameters.valid);
                 if (mAutoFocus) {
                     mCamera.focus(null, 0, 0, -1);
                 }
@@ -101,6 +102,8 @@ public abstract class CameraManager {
     protected abstract void initializeRenderer(Activity activity, Object... extra);
 
     protected abstract void launchCameraInner(int cameraId, CameraInterface.Parameter parameters);
+
+    protected abstract void checkPermission(boolean hasPermission);
 
     public CameraContainer getCameraViewContainer() {
         return mCameraContainer;
