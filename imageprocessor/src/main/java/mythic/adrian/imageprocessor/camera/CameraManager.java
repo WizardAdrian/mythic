@@ -52,10 +52,14 @@ public abstract class CameraManager {
             }
 
             @Override
-            public void onStartPreview() {
-                checkPermission(mParameters.valid);
-                if (mAutoFocus) {
-                    mCamera.focus(null, 0, 0, -1);
+            public void onStartPreview(int code, String msg) {
+                if (code == CameraProxy.CODE_SUCCESS) {
+                    checkPermission(mParameters.valid);
+                    if (mAutoFocus) {
+                        mCamera.focus(null, 0, 0, -1);
+                    }
+                } else {
+
                 }
             }
         });
@@ -83,6 +87,10 @@ public abstract class CameraManager {
         mCamera.closeCamera();
     }
 
+    public void takePicture(CameraInterface.ImageCallBack imageCallBack) {
+        mCamera.takePicture(imageCallBack);
+    }
+
     public int getCurrentCameraId() {
         return mCamera.getCurrentCameraId();
     }
@@ -91,7 +99,7 @@ public abstract class CameraManager {
         mCameraContainer.requestRender();
     }
 
-    public void onResume(){
+    public void onResume() {
         mCameraContainer.onResume();
     }
 

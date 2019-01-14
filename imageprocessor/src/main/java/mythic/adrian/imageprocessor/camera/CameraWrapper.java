@@ -142,7 +142,7 @@ public final class CameraWrapper implements CameraInterface {
     }
 
     @Override
-    public void startPreview(SurfaceTexture texture, ImageCallBack callBack) {
+    public void startPreview(SurfaceTexture texture, ImageCallBack callBack) throws IOException {
         if (null == mCamera) {
             return;
         }
@@ -151,11 +151,8 @@ public final class CameraWrapper implements CameraInterface {
         }
         mCallBack = callBack;
         if (null != texture) {
-            try {
-                mCamera.setPreviewTexture(texture);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            mCamera.setPreviewTexture(texture);
+
         }
         resetPreviewStatus();
         mPreviewOpen.set(true);

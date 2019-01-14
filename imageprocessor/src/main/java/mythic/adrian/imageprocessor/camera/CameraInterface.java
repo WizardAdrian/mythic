@@ -2,6 +2,7 @@ package mythic.adrian.imageprocessor.camera;
 
 import android.graphics.SurfaceTexture;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CameraInterface {
@@ -50,7 +51,7 @@ public interface CameraInterface {
 
     void closeCamera();
 
-    void startPreview(final SurfaceTexture texture, final ImageCallBack b);
+    void startPreview(final SurfaceTexture texture, final ImageCallBack b) throws IOException;
 
     void stopPreview();
 

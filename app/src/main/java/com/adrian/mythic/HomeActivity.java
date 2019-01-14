@@ -1,11 +1,15 @@
 package com.adrian.mythic;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import mythic.adrian.imageprocessor.camera.CameraInterface;
 import mythic.adrian.imageprocessor.camera.CameraUtils;
+import mythic.adrian.imageprocessor.utils.BitmapUtil;
 
 /**
  * Created by Adrian on 2017/8/4.
@@ -30,6 +34,25 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 switchCamera();
+            }
+        });
+
+        findViewById(R.id.btn_take_picture).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCameraManager.takePicture(new CameraInterface.ImageCallBack() {
+                    @Override
+                    public void onHandle(byte[] data, int w, int h, int format) {
+                        BitmapFactory.Options opts = new BitmapFactory.Options();
+                        Bitmap bitmap = BitmapUtil.getPicFromBytes(data, opts);
+                        BitmapUtil.checkBitmap(bitmap);
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+
+                    }
+                });
             }
         });
     }
@@ -60,7 +83,7 @@ public class HomeActivity extends Activity {
         mCameraManager.setRatio(ratio);
         mCameraManager.forbidFocusView(true);
 
-        mFlCameraContainer = (FrameLayout) findViewById(R.id.fl_camera_container);
+        mFlCameraContainer = findViewById(R.id.fl_camera_container);
         width = CameraUtils.getScreenWidth(this);
         height = (int) (width / ratio);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);

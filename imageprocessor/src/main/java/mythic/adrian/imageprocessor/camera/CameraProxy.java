@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -15,6 +16,8 @@ import java.util.List;
 
 public class CameraProxy implements CameraInterface {
 
+    public final static int CODE_SUCCESS = 0;
+    public final static int CODE_FAILED = -1;
     private CameraInterface mCameraInterface;
     private Handler mHandle;
     private HandlerThread mThread;
@@ -26,7 +29,7 @@ public class CameraProxy implements CameraInterface {
 
         void onSetParameter(Parameter p);
 
-        void onStartPreview();
+        void onStartPreview(int code, String msg);
     }
 
     private OnCameraLifeCircleListener mOnCameraLifeCircleListener;
@@ -89,9 +92,16 @@ public class CameraProxy implements CameraInterface {
         mHandle.post(new CameraRunnable() {
             @Override
             public void onRun() {
-                mCameraInterface.startPreview(texture, b);
-                if (mOnCameraLifeCircleListener != null) {
-                    mOnCameraLifeCircleListener.onStartPreview();
+                try {
+                    mCameraInterface.startPreview(texture, b);
+                    if (mOnCameraLifeCircleListener != null) {
+                        mOnCameraLifeCircleListener.onStartPreview(CODE_SUCCESS, "");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    if (mOnCameraLifeCircleListener != null) {
+                        mOnCameraLifeCircleListener.onStartPreview(CODE_FAILED, e.getMessage());
+                    }
                 }
             }
         });
@@ -205,7 +215,7 @@ public class CameraProxy implements CameraInterface {
     }
 
     @Override
-    public void focus(final FocusCallBack acb,final List<Photometry> photometryList) {
+    public void focus(final FocusCallBack acb, final List<Photometry> photometryList) {
         mHandle.post(new CameraRunnable() {
             @Override
             public void onRun() {
